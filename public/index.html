@@ -94,7 +94,7 @@
 
 <header>
   <h1>Job Board: Dreddy</h1>
-  <p>Gesundheitswirtschaft, Pharma, Digital Health und Postdoc-Stellen. München, Berlin, New York. Neuer Scan alle zwei Wochen am Montag.</p>
+  <p>Gesundheitswirtschaft, Pharma, Digital Health und Postdoc-Stellen. München, Berlin, New York. Neuer Scan jeden Montag und Donnerstag.</p>
   <div class="meta" id="meta"></div>
 </header>
 
@@ -122,7 +122,7 @@
 <script>
 const SCAN_META = {
   lastScan: "2026-10-12",
-  nextScan: "2026-10-26",
+  nextScan: "2026-10-15",
   totalScraped: 412,
   shortlisted: 24,
   verified: 16,
@@ -379,7 +379,7 @@ function renderMeta(){
   const m = SCAN_META;
   document.getElementById('meta').innerHTML =
     `<span><b>Letzter Scan</b> ${m.lastScan}</span>`+
-    `<span><b>Nächster Scan</b> Montag ${m.nextScan}</span>`+
+    `<span><b>Nächster Scan</b> ${m.nextScan}</span>`+
     `<span><b>${m.totalScraped}</b> Anzeigen gescannt</span>`+
     `<span><b>${m.verified}</b> live geprüft</span>`+
     `<span><b>${m.excluded}</b> aussortiert</span>`;
