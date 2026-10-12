@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Andrea Job Board</title>
+<style>
+  :root{
+    --bg:#fbfbfa; --surface:#ffffff; --line:#e8e6e1; --line-soft:#f0eeea;
+    --ink:#1f1e1c; --ink-2:#57544e; --ink-3:#8b877f;
+    --a:#1a7f52; --a-bg:#e8f4ed; --b:#2563a8; --b-bg:#e8effa;
+    --c:#8a6d1f; --c-bg:#f7f0dd; --x:#9b3b3b; --x-bg:#f9ebeb;
+    --accent:#1f1e1c;
+    --radius:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#161613; --surface:#1e1e1b; --line:#33322e; --line-soft:#272623;
+      --ink:#f2f0ec; --ink-2:#b4b0a8; --ink-3:#807c74;
+      --a:#5ec08c; --a-bg:#16301f; --b:#7aa9e6; --b-bg:#16243a;
+      --c:#d6b45c; --c-bg:#302711; --x:#e08383; --x-bg:#331b1b;
+      --accent:#f2f0ec;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#161613; --surface:#1e1e1b; --line:#33322e; --line-soft:#272623;
+    --ink:#f2f0ec; --ink-2:#b4b0a8; --ink-3:#807c74;
+    --a:#5ec08c; --a-bg:#16301f; --b:#7aa9e6; --b-bg:#16243a;
+    --c:#d6b45c; --c-bg:#302711; --x:#e08383; --x-bg:#331b1b;
+    --accent:#f2f0ec;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding-block:40px 72px; padding-left:20px; padding-right:20px}
+
+  header h1{font-size:26px; letter-spacing:-.02em; margin:0 0 6px}
+  header p{margin:0; color:var(--ink-2); font-size:14px}
+  .meta{margin-top:18px; display:flex; flex-wrap:wrap; gap:8px 18px; font-size:12.5px; color:var(--ink-3)}
+  .meta b{color:var(--ink-2); font-weight:600}
+
+  .divider{height:1px; background:var(--line); margin:28px 0 22px; border:0}
+
+  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px}
+  .filters button{
+    font:inherit; font-size:13px; cursor:pointer; padding:6px 13px; border-radius:999px;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink-2); transition:.12s;
+  }
+  .filters button:hover{border-color:var(--ink-3)}
+  .filters button[aria-pressed="true"]{background:var(--accent); color:var(--bg); border-color:var(--accent)}
+
+  .sect{font-size:12px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); margin:30px 0 12px; font-weight:600}
+  .sect:first-of-type{margin-top:0}
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 18px 16px; margin-bottom:10px;
+  }
+  .card.dim{opacity:.62}
+  .row1{display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap}
+  .pill{
+    flex:none; font-size:11px; font-weight:700; letter-spacing:.04em;
+    padding:3px 9px; border-radius:6px; margin-top:2px;
+  }
+  .pill.A{color:var(--a); background:var(--a-bg)}
+  .pill.B{color:var(--b); background:var(--b-bg)}
+  .pill.C{color:var(--c); background:var(--c-bg)}
+  .pill.X{color:var(--x); background:var(--x-bg)}
+  .titlebox{flex:1 1 260px; min-width:0}
+  .titlebox h3{margin:0; font-size:16px; line-height:1.35; letter-spacing:-.01em}
+  .titlebox h3 a{color:inherit; text-decoration:none; border-bottom:1px solid var(--line)}
+  .titlebox h3 a:hover{border-bottom-color:var(--ink-3)}
+  .co{margin:3px 0 0; font-size:13.5px; color:var(--ink-2)}
+  .tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:11px}
+  .tag{font-size:11.5px; color:var(--ink-3); border:1px solid var(--line-soft); background:var(--bg); padding:2px 8px; border-radius:5px}
+  .tag.dream{color:var(--c); border-color:var(--c-bg); background:var(--c-bg); font-weight:600}
+  .tag.new{color:var(--a); border-color:var(--a-bg); background:var(--a-bg); font-weight:600}
+  .note{margin:11px 0 0; font-size:13.5px; color:var(--ink-2)}
+  .note.warn{color:var(--x)}
+
+  .empty{color:var(--ink-3); font-size:14px; padding:20px 0}
+
+  footer{margin-top:44px; padding-top:20px; border-top:1px solid var(--line); font-size:12.5px; color:var(--ink-3)}
+  footer p{margin:0 0 7px}
+  a{color:inherit}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Job Board: Andrea</h1>
+  <p>Gesundheitswirtschaft, Pharma, Digital Health und Postdoc-Stellen. München, Berlin, New York. Neuer Scan alle zwei Wochen am Montag.</p>
+  <div class="meta" id="meta"></div>
+</header>
+
+<hr class="divider">
+
+<div class="filters" id="filters">
+  <button data-f="all" aria-pressed="true">Alle</button>
+  <button data-f="new" aria-pressed="false">Neu</button>
+  <button data-f="AB" aria-pressed="false">A + B</button>
+  <button data-f="muc" aria-pressed="false">München</button>
+  <button data-f="ber" aria-pressed="false">Berlin</button>
+  <button data-f="nyc" aria-pressed="false">New York</button>
+  <button data-f="research" aria-pressed="false">Research Track</button>
+</div>
+
+<div id="list"></div>
+
+<footer>
+  <p><b>Rausgefiltert:</b> rein quantitative Stellen, Data Science und Biostatistik, Junior- und Assistenzstellen, Stellen mit Pflicht zur Approbation als Ärztin, abgelaufene Links.</p>
+  <p>Gebaut von Robert. Wenn eine Firma oder Stellenart raus soll, sag Bescheid, der nächste Scan lernt es.</p>
+</footer>
+
+</div>
+
+<script>
+const SCAN_META = {
+  lastScan: "2026-10-12",
+  nextScan: "2026-10-26",
+  totalScraped: 412,
+  shortlisted: 24,
+  verified: 16,
+  excluded: 3,
+  sources: ["LinkedIn","Web search","Academic job boards"]
+};
+
+const JOBS = [
+ {
+  "id": "nyam-senior-program-officer",
+  "grade": "A",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Senior Program Officer",
+  "company": "The New York Academy of Medicine",
+  "location": "New York, NY",
+  "work": "Hybrid",
+  "posted": "12 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4476044056/",
+  "verified": true,
+  "note": "Passt inhaltlich fast perfekt: Mixed Methods mit Fokusgruppen und qualitativen Interviews, Healthy Aging als Schwerpunkt, Projektleitung und Drittmittelanträge. Deine Dissertation zu Ageing in Place ist der Aufhänger. Offene Frage ist das Visum, die Anzeige erwähnt kein Sponsoring, also früh klären. Gehalt 110 bis 115k USD. Erst seit heute online, 14 Bewerbungen."
+ },
+ {
+  "id": "tandem-health-medical-operations-dach",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Medical Operations - DACH (m/f/d)",
+  "company": "Tandem Health",
+  "location": "München",
+  "work": "On-site",
+  "posted": "6 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4475860325/",
+  "verified": true,
+  "note": "KI-Dokumentation für Ärztinnen und Ärzte. Gesucht sind klinische Erfahrung, etwas Startup-Erfahrung und Deutsch als Muttersprache: Physiotherapie in der Klinik plus 8sense deckt das ab. Lücke: eher operativ als wissenschaftlich."
+ },
+ {
+  "id": "vertanical-scientific-marketing-medical-affairs",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "(Senior) Manager Scientific Marketing/Medical Affairs",
+  "company": "VERTANICAL",
+  "location": "München",
+  "work": "Hybrid",
+  "posted": "12 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4469327731/",
+  "verified": true,
+  "note": "Wissenschaftliche Inhalte zielgruppengerecht aufbereiten, Kongresse planen, Medical Affairs. Deine Publikationen und das Marketing bei 8sense passen. Lücke: genannt sind Medizin, Pharmazie oder Biologie, Physiotherapie plus PhD musst du als gleichwertig verkaufen. Die Firma macht medizinisches Cannabis."
+ },
+ {
+  "id": "cgm-projektmanager-digital-health",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Projektmanager Digital Health (m/w/d)",
+  "company": "CompuGroup Medical",
+  "location": "München",
+  "work": "Hybrid",
+  "posted": "6 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4326286178/",
+  "verified": true,
+  "note": "Digitalisierungsprojekte im Klinikumfeld, Gesundheitsmanagement als Studium wird direkt genannt. YourHome 4.0 mit den Assistenztechnologien ist dein Referenzprojekt. Über 100 Bewerbungen, also nicht lange warten."
+ },
+ {
+  "id": "cheplapharm-senior-science-program-manager",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Senior Science Program Manager (m/f/d)",
+  "company": "CHEPLAPHARM",
+  "location": "Berlin",
+  "work": "On-site",
+  "posted": "1 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4469787050/",
+  "verified": true,
+  "note": "Bereichsübergreifende wissenschaftliche Projekte leiten, Stakeholder koordinieren, Projektstrategie definieren. Lücke: gefordert sind Naturwissenschaften, Pharmazie oder Medizin und sieben Jahre Erfahrung, du kommst aus Forschungsprojekten statt aus Pharma. Über 100 Bewerbungen."
+ },
+ {
+  "id": "ottobock-gtm-manager-neuromobility",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Go-To-Market Manager NeuroMobility (d/w/m)",
+  "company": "Ottobock",
+  "location": "Berlin",
+  "work": "On-site",
+  "posted": "5 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4475551526/",
+  "verified": true,
+  "note": "Neurologische und orthopädische Reha ist genau dein klinischer Hintergrund, und die Abteilung arbeitet an Versorgungsprogrammen. Lücke: eher Vertrieb und Marketing, gewünscht ist ein wirtschaftlicher Master mit fünf Jahren Erfahrung. Laut LinkedIn befristet. Unterlagen auf Englisch einreichen."
+ },
+ {
+  "id": "theramex-msl-gynaecology",
+  "grade": "B",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Medical Science Liaison, Gynaecology (m/w/d)",
+  "company": "Theramex",
+  "location": "Hamburg",
+  "work": "Remote",
+  "posted": "2 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4474713739/",
+  "verified": true,
+  "note": "Frauengesundheit, und laut LinkedIn remote. Ehrlich gesagt ist MSL ein Sprung: gesucht ist ein naturwissenschaftlicher Abschluss, Medical Affairs Erfahrung ist erwünscht. Vorher klären, welche Region das Gebiet abdeckt, MSL bedeutet meist viel Reisen."
+ },
+ {
+  "id": "nyu-grossman-postdoc-health-equity",
+  "grade": "B",
+  "track": "research",
+  "scanDate": "2026-10-12",
+  "title": "Postdoctoral Fellowship, Institute for Excellence in Health Equity",
+  "company": "NYU Grossman School of Medicine",
+  "location": "New York, NY",
+  "work": "",
+  "posted": "",
+  "source": "SBM Job Board",
+  "url": "https://www.sbm.org/membership/job-board/nyu-grossman-school-of-medicine-postdoctoral-fellowship-institute-for-excellence-in-health-equity",
+  "verified": true,
+  "note": "Behavioral Medicine mit Health Equity und Women's Health als Schwerpunkten, qualitative oder quantitative Methoden. Fortlaufende Bewerbung per E-Mail an die Projektleitung. US-Postdocs laufen meist über ein J-1 Visum, das Unis routinemäßig sponsern. Lücke: die Projekte sind teils klinische Studien."
+ },
+ {
+  "id": "gsk-medical-affairs-womens-cancer",
+  "grade": "C",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "(Senior) Regional Medical Affairs Manager - Women's Cancer (m/f/d)",
+  "company": "GSK",
+  "location": "München",
+  "work": "Remote",
+  "posted": "8 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4438021551/",
+  "verified": true,
+  "note": "Frauengesundheit und remote, aber gefordert sind mehrjährige Pharma-Erfahrung im medizinischen Außendienst in GynOnkologie oder Onkologie. Realistisch nur mit Kontakt ins Team. Über 100 Bewerbungen."
+ },
+ {
+  "id": "merz-global-patient-advocacy-lead",
+  "grade": "C",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Global Patient Advocacy Lead (m/f/d)",
+  "company": "Merz Therapeutics",
+  "location": "Frankfurt",
+  "work": "",
+  "posted": "30 Sep 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4463859443/",
+  "verified": true,
+  "note": "Inhaltlich sehr nah an deinem Thema, Patientenstimmen in Entscheidungen bringen. Aber Frankfurt, und Erfahrung mit Patientenorganisationen wird vorausgesetzt. Nur falls Frankfurt eine Option ist."
+ },
+ {
+  "id": "doctolib-senior-medical-content-manager",
+  "grade": "C",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Senior Medical Content Manager (x/f/m)",
+  "company": "Doctolib",
+  "location": "Berlin",
+  "work": "Hybrid",
+  "posted": "9 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4469116673/",
+  "verified": true,
+  "note": "Public Health als Abschluss wird akzeptiert, gefordert sind aber vier Jahre Medical Content Writing. Eher Kommunikation als Wissenschaft."
+ },
+ {
+  "id": "pari-senior-medical-affairs-manager",
+  "grade": "C",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "(Senior) Medical Affairs Manager (m/w/d)",
+  "company": "PARI",
+  "location": "Starnberg",
+  "work": "On-site",
+  "posted": "7 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4476590905/",
+  "verified": true,
+  "note": "Promotion ist erwünscht, Kern sind aber fünf Jahre Medical oder Clinical Affairs bei Medizinprodukten und Clinical Evaluation Reports."
+ },
+ {
+  "id": "oscar-health-ux-researcher",
+  "grade": "C",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "User Experience Researcher",
+  "company": "Oscar Health",
+  "location": "New York, NY",
+  "work": "Hybrid",
+  "posted": "9 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4458069394/",
+  "verified": true,
+  "note": "Qualitative Nutzerforschung bei einer Krankenversicherung, also nah an deinen Methoden. Aber Industrie-UX ohne Visa-Hinweis und über 100 Bewerbungen."
+ },
+ {
+  "id": "bmg-nachwuchsgruppen-frauengesundheit",
+  "grade": "X",
+  "track": "research",
+  "scanDate": "2026-10-12",
+  "title": "Förderaufruf: Nachwuchsgruppen Versorgungsforschung Frauengesundheit",
+  "company": "Bundesministerium für Gesundheit",
+  "location": "Deutschland",
+  "work": "",
+  "posted": "14 Jan 2026",
+  "source": "Web search",
+  "url": "https://www.bundesgesundheitsministerium.de/fileadmin/Dateien/3_Downloads/B/Bekanntmachungen/FoeRiLi_Nachwuchsgruppen_Frauengesundheit.pdf",
+  "verified": true,
+  "note": "Frist war der 13. Februar 2026, also vorbei. Trotzdem merken: eigene Nachwuchsgruppe in Versorgungsforschung Frauengesundheit, bis zu 5 Jahre, mit einer Hochschule als Partner. Das ist exakt dein Profil, falls es eine zweite Runde gibt."
+ },
+ {
+  "id": "syracuse-postdoc-disability-policy",
+  "grade": "X",
+  "track": "research",
+  "scanDate": "2026-10-12",
+  "title": "Postdoctoral Researcher, Disability Employment Policy",
+  "company": "Syracuse University",
+  "location": "Syracuse, NY",
+  "work": "",
+  "posted": "9 Okt 2026",
+  "source": "LinkedIn",
+  "url": "https://www.linkedin.com/jobs/view/4477894116/",
+  "verified": true,
+  "note": "Thema Behinderung passt, aber statistische Programmierung ist Voraussetzung, und Syracuse liegt rund vier Stunden von New York City entfernt."
+ },
+ {
+  "id": "organon-sr-medical-manager-womens-health",
+  "grade": "X",
+  "track": "industry",
+  "scanDate": "2026-10-12",
+  "title": "Sr Medical Manager Women's Health",
+  "company": "Organon",
+  "location": "Brasilien",
+  "work": "",
+  "posted": "",
+  "source": "Web search",
+  "url": "",
+  "verified": true,
+  "note": "Titel passt perfekt, die Stelle ist aber in Brasilien."
+ }
+];
+
+const esc = (s)=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function renderMeta(){
+  const m = SCAN_META;
+  document.getElementById('meta').innerHTML =
+    `<span><b>Letzter Scan</b> ${m.lastScan}</span>`+
+    `<span><b>Nächster Scan</b> Montag ${m.nextScan}</span>`+
+    `<span><b>${m.totalScraped}</b> Anzeigen gescannt</span>`+
+    `<span><b>${m.verified}</b> live geprüft</span>`+
+    `<span><b>${m.excluded}</b> aussortiert</span>`;
+}
+
+function cardHTML(j){
+  const dead = j.grade === 'X';
+  const tags = [];
+  tags.push(`<span class="tag">${esc(j.location)}</span>`);
+  if(j.work) tags.push(`<span class="tag">${esc(j.work)}</span>`);
+  if(j.posted) tags.push(`<span class="tag">Online seit ${esc(j.posted)}</span>`);
+  tags.push(`<span class="tag">${esc(j.source)}</span>`);
+  if(j.track==='research') tags.push(`<span class="tag dream">Research Track</span>`);
+  if(!dead && j.scanDate === SCAN_META.lastScan) tags.push(`<span class="tag new">Neu</span>`);
+  const title = j.url
+    ? `<a href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>`
+    : esc(j.title);
+  return `<article class="card${dead?' dim':''}">
+    <div class="row1">
+      <span class="pill ${j.grade}">${dead?'RAUS':j.grade}</span>
+      <div class="titlebox">
+        <h3>${title}</h3>
+        <p class="co">${esc(j.company)}</p>
+      </div>
+    </div>
+    <div class="tags">${tags.join('')}</div>
+    <p class="note${dead?' warn':''}">${esc(j.note)}</p>
+  </article>`;
+}
+
+const MUC = ['München','Starnberg','Garching','Martinsried','Planegg','Unterschleißheim'];
+function passes(j, f){
+  if(f==='all') return true;
+  if(f==='new') return j.scanDate===SCAN_META.lastScan;
+  if(f==='AB') return j.grade==='A'||j.grade==='B';
+  if(f==='muc') return MUC.some(c=>j.location.indexOf(c)===0);
+  if(f==='ber') return j.location.indexOf('Berlin')===0;
+  if(f==='nyc') return j.location.indexOf('New York')===0;
+  if(f==='research') return j.track==='research';
+  return true;
+}
+
+const SECTIONS = [
+  {key:'A', label:'Jetzt bewerben'},
+  {key:'B', label:'Stark, genauer anschauen'},
+  {key:'C', label:'Einen Blick wert'},
+  {key:'X', label:'Diesmal aussortiert'}
+];
+
+function render(f){
+  const list = document.getElementById('list');
+  const shown = JOBS.filter(j=>passes(j,f));
+  if(!shown.length){ list.innerHTML = '<p class="empty">Für diesen Filter gibt es in diesem Scan nichts.</p>'; return; }
+  let html = '';
+  for(const s of SECTIONS){
+    const group = shown.filter(j=>j.grade===s.key);
+    if(!group.length) continue;
+    html += `<p class="sect">${s.label} (${group.length})</p>` + group.map(cardHTML).join('');
+  }
+  list.innerHTML = html;
+}
+
+document.getElementById('filters').addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  for(const btn of document.querySelectorAll('#filters button')) btn.setAttribute('aria-pressed', String(btn===b));
+  render(b.dataset.f);
+});
+
+renderMeta();
+render('all');
+</script>
+</body>
+</html>
